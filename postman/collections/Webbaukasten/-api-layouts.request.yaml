@@ -1,0 +1,47 @@
+$kind: http-request
+name: /api/layouts
+description: |-
+  ---
+  ## Alle Layouts abrufen
+
+  **GET** `127.0.0.1:5000/api/layouts`
+
+  Gibt eine Liste aller in der Datenbank gespeicherten Layouts zurück.
+
+  ---
+
+  ### Parameter
+
+  Keine URL-Parameter erforderlich.
+
+  ---
+
+  ### Request-Body
+
+  Keiner erforderlich.
+
+  ---
+
+  ### Antwort (HTTP 200)
+
+  Gibt ein JSON-Array zurück, in dem jedes Element ein gespeichertes Layout repräsentiert:
+
+  | Feld | Typ | Beschreibung |
+  |---|---|---|
+  | **id** | integer | Eindeutige ID des Layouts |
+  | **moduleName** | string | Name des Moduls |
+  | **version** | string | Versionsnummer des Layouts |
+  | **content** | object | Layout-Inhalt als verschachteltes Komponentenobjekt |
+
+  ---
+
+  ### Fehlercodes
+
+  | HTTP-Status | Bedeutung |
+  |---|---|
+  | **500** | Interner Serverfehler beim Abrufen der Layouts |
+
+  ---
+url: 127.0.0.1:5000/api/layouts
+method: GET
+order: 3000

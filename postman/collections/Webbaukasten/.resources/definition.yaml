@@ -1,0 +1,17 @@
+$kind: collection
+description: |-
+  ## Webbaukasten – Layout API
+
+  Diese Collection umfasst die Backend-API des **Webbaukasten**\-Projekts, einem modularen Web-Builder, mit dem Layouts erstellt, gespeichert und aus einer Datenbank abgerufen werden können.
+
+  Die API läuft lokal unter `127.0.0.1:5000` und stellt drei Endpunkte bereit:
+
+  | Methode | Endpunkt | Zweck |
+  | --- | --- | --- |
+  | `POST` | `/api/layout` | Neues Layout in der Datenbank speichern |
+  | `GET` | `/api/layout/` | Ein bestimmtes Layout anhand seiner ID laden |
+  | `GET` | `/api/layouts` | Liste aller gespeicherten Layouts abrufen |
+
+  Jedes Layout besteht aus einem **Modulnamen**, einer **Versionsnummer** und einem verschachtelten **Inhaltsobjekt**, das die Komponentenstruktur des Layouts beschreibt.
+
+  Diese Collection dient zum Testen und Validieren der Layout-Persistenzschicht der Webbaukasten-Anwendung.

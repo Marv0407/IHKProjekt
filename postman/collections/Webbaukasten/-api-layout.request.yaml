@@ -1,0 +1,97 @@
+$kind: http-request
+name: /api/layout
+description: |-
+  ## Layout speichern
+
+  **POST** `127.0.0.1:5000/api/layout`
+
+  Speichert ein neues Layout in der Datenbank. Der Layout-Inhalt wird als JSON-Objekt im Request-Body übergeben.
+
+  ---
+
+  ### Parameter
+
+  Keine URL-Parameter erforderlich.
+
+  ---
+
+  ### Request-Body (JSON)
+
+  | Feld | Typ | Beschreibung |
+  |---|---|---|
+  | **moduleName** | string | Name des Moduls (z. B. `"Postman-Integrationstest"`) |
+  | **version** | string | Versionsnummer des Layouts (z. B. `"1.0"`) |
+  | **content** | object | Layout-Inhalt als verschachteltes Komponentenobjekt |
+
+  #### Struktur von `content`
+
+  | Feld | Typ | Beschreibung |
+  |---|---|---|
+  | **id** | string | Eindeutige ID des Wurzelelements (z. B. `"root"`) |
+  | **type** | string | Typ des Elements (z. B. `"canvas"`) |
+  | **props** | object | Eigenschaften des Elements (z. B. `gridCols`, `gridRows`) |
+  | **children** | array | Liste von untergeordneten Komponenten, jeweils mit `id`, `type` und `props` |
+
+  ---
+
+  ### Antwort
+
+  | HTTP-Status | Bedeutung |
+  |---|---|
+  | **200 / 201** | Layout wurde erfolgreich gespeichert |
+  | **400** | Ungültiger oder fehlerhafter Request-Body |
+  | **500** | Interner Serverfehler |
+
+  ---
+url: 127.0.0.1:5000/api/layout
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"version\": \"1.0\",\r
+
+    \    \"moduleName\": \"Postman-Integrationstest\",\r
+
+    \    \"content\": {\r
+
+    \        \"id\": \"root\",\r
+
+    \        \"type\": \"canvas\",\r
+
+    \        \"props\": {\r
+
+    \            \"gridCols\": 12,\r
+
+    \            \"gridRows\": 10\r
+
+    \        },\r
+
+    \        \"children\": [\r
+
+    \            {\r
+
+    \                \"id\": \"btn_postman\",\r
+
+    \                \"type\": \"button\",\r
+
+    \                \"props\": {\r
+
+    \                    \"label\": \"Geprüft mit Postman\",\r
+
+    \                    \"theme\": \"primary\",\r
+
+    \                    \"gridX\": 5,\r
+
+    \                    \"gridY\": 2\r
+
+    \                }\r
+
+    \            }\r
+
+    \        ]\r
+
+    \    }\r
+
+    }"
+order: 1000
