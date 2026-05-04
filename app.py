@@ -1,6 +1,21 @@
+import pyodbc
+import json
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
+
+conn_str = (
+    'DRIVER={ODBC Driver 18 for SQL Server};'
+    'SERVER=pse-praktika;'
+    'DATABASE=Webbaukasten;'
+    'UID=mmueller;'
+    'PWD=Prisma1.;'
+    'TrustServerCertificate=yes;'
+)
+
+
+def get_db_connection():
+    return pyodbc.connect(conn_str)
 
 #mock_data
 mock_layouts = [{
@@ -24,28 +39,65 @@ mock_layouts = [{
 def save_layout():
     data = request.json
 
-    #TODO: data mit pyodbc in der MS-SQL Datenbank speichern
+    module_name = data.get("moduleName", "Unbekanntes Modul")
 
-    #201 = HTTP-Statuscode -> Created
-    return jsonify({"status": "success", "message": "Layout gespeichert"}), 201
+    layout_json = json.dumps(data)
 
-@app.route('/api/layout', methods=['GET'])
-def get_layout_id():
-    #TODO: Layout mit der entsprechenden <id> aus MS-SQL laden
-    layout_id = request.args.get("id")
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
+        # SQL-Injection-Schutz durch Parameterized Queries
+        cursor.execute(
+            "INSERT INTO UI_Modules (Name, LayoutConfig) VALUES (?, ?)",
+            (module_name, layout_json)
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-    if not layout_id:
-        #400 = HTTP-Statuscode -> Bad Request
-        return jsonify({"error": "Keine ID angegeben"}), 400
-    #200 = HTTP-Statuscode -> OK
-    return jsonify({"status": "debug", "message": f"Würde Layout #{layout_id} laden"}), 200
+        return jsonify({"status": "success", "message": "Gespeichert in MS-SQL"}), 201
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/layouts', methods=['GET'])
 def get_layouts():
-    # TODO: Alle verfügbaren Layouts aus MS-SQL laden
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        # ID und Name für die Auswahl-Liste
+        cursor.execute("SELECT ModuleID, Name, UpdatedAt FROM UI_Modules WHERE IsActive = 1")
 
-    return jsonify(mock_layouts), 200
+        columns = [column[0] for column in cursor.description]
+        results = []
+        for row in cursor.fetchall():
+            results.append(dict(zip(columns, row)))
+
+        cursor.close()
+        conn.close()
+        return jsonify(results), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/layout/<int:id>', methods=['GET'])
+def get_layout_id(id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        # Gezieltes Laden eines Layout-Strings via ID
+        cursor.execute("SELECT LayoutConfig FROM UI_Modules WHERE ModuleID = ?", (id,))
+        row = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        if row:
+            # String aus DB wird in ein JSON-Objekt umgewandelt
+            return jsonify(json.loads(row[0])), 200
+        else:
+            return jsonify({"status": "error", "message": "Layout nicht gefunden"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
