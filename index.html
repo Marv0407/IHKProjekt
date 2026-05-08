@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Low-Code UI Editor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="editor-container">
+    <!-- Toolbar -->
+    <aside class="toolbar">
+        <h3>Komponenten</h3>
+        <div class="draggable-item" draggable="true" data-type="button">Button</div>
+        <div class="draggable-item" draggable="true" data-type="input">Input</div>
+        <div class="draggable-item" draggable="true" data-type="label">Label</div>
+        <hr>
+        <div class="load-area">
+            <h3>Gespeicherte Module</h3>
+            <select id="module-select">
+                <option value="">-- Modul wählen --</option>
+            </select>
+            <button id="load-btn">Laden</button>
+        </div>
+        <hr>
+        <div class="preview-area">
+            <h3>Preview</h3>
+            <button type="button" id="preview-btn">Vorschau Öffnen</button>
+        </div>
+
+    </aside>
+
+    <!-- Canvas -->
+    <main class="canvas-area">
+        <div id="drop-canvas" class="grid-canvas">
+            <!-- Hier werden die Komponenten dynamisch generiert -->
+        </div>
+    </main>
+
+    <!-- Properties -->
+    <aside class="properties-panel">
+        <h3>Eigenschaften</h3>
+        <div id="property-fields">
+            <p>Wähle ein Element aus.</p>
+        </div>
+
+        <button id="save-btn">Layout speichern</button>
+
+        <div id="delete-area" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px;">
+            <button id="delete-btn" class="btn-danger" style="display: none; width: 100%;">Element löschen</button>
+        </div>
+    </aside>
+</div>
+<script src="editor.js"></script>
+</body>
+</html>

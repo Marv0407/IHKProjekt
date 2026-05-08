@@ -1,6 +1,6 @@
 import pyodbc
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 
 app = Flask(__name__)
 
@@ -17,27 +17,25 @@ conn_str = (
 def get_db_connection():
     return pyodbc.connect(conn_str)
 
-#mock_data
-mock_layouts = [{
-    "version": "1.0",
-    "moduleName": "Kunden-Login-Formular",
-    "content": {
-        "id": "root",
-        "type": "canvas",
-        "props": { "gridCols": 12, "gridRows": 10 },
-        "children": [
-            {
-                "id": "btn_1",
-                "type": "button",
-                "props": { "label": "Absenden", "theme": "primary", "gridX": 1, "gridY": 5 }
-            }
-        ]
-    }
-}]
+
+# Routing ---------
+
+@app.route("/")
+def index():
+    return send_from_directory(".", "index.html")
+
+@app.route("/<path:path>")
+def send_static(path):
+    return send_from_directory(".", path)
 
 @app.route('/api/layout', methods=['POST'])
 def save_layout():
     data = request.json
+
+    is_valid, message = is_valid_layout(data)
+    if not is_valid:
+        # 400 (Bad Request)
+        return jsonify({"status": "error", "message": message}), 400
 
     module_name = data.get("moduleName", "Unbekanntes Modul")
 
@@ -98,6 +96,32 @@ def get_layout_id(id):
             return jsonify({"status": "error", "message": "Layout nicht gefunden"}), 404
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+# JSON-Validierung---
+def is_valid_layout(data):
+    """Prüft, ob das empfangene JSON die Mindestanforderungen erfüllt."""
+    # 1. Muss ein Dictionary (Objekt) sein
+    if not isinstance(data, dict):
+        return False, "Daten sind kein gültiges JSON-Objekt."
+
+    # 2. Pflichtfelder auf oberster Ebene prüfen
+    required_keys = ['version', 'moduleName', 'content']
+    for key in required_keys:
+        if key not in data:
+            return False, f"Pflichtfeld '{key}' fehlt."
+
+    # 3. Struktur des 'content'-Bereichs prüfen
+    content = data.get('content')
+    if 'type' not in content or 'children' not in content:
+        return False, "Invalide Content-Struktur (type oder children fehlt)."
+
+    # 4. Typ-Prüfung
+    if not isinstance(content['children'], list):
+        return False, "'children' muss ein Array sein."
+
+    return True, "Validierung erfolgreich."
+
 
 if __name__ == '__main__':
     app.run(debug=True)

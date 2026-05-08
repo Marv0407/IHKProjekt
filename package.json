@@ -1,8 +1,8 @@
 {
-  "name": "Baukasten",
+  "name": "baukasten",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "editor.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

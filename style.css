@@ -1,0 +1,144 @@
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.editor-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 250px;
+    height: 100vh;
+    overflow: hidden;}
+
+.toolbar, .properties-panel {
+    background-color: #ffffff;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.toolbar {
+    border-right: 1px solid #ddd;
+}
+
+.properties-panel {
+    border-left: 1px solid #ddd;
+}
+
+h3 {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 0;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.draggable-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    cursor: grab;
+    text-align: center;
+    font-weight: bold;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.draggable-item:hover {
+    border-color: #3498db;
+    background-color: #eaf4fc;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #3498db;
+    color: white;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.canvas-area {
+    overflow: auto;
+    padding: 20px;
+}
+
+.grid-canvas {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 50px;
+    gap: 0;
+    min-height: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+
+    background-image:
+            linear-gradient(to right, #eee 1px, transparent 1px),
+            linear-gradient(to bottom, #eee 1px, transparent 1px);
+    background-size: calc(100% / 12) 50px;
+}
+
+
+.component-wrapper {
+    border: 1px dashed #3498db;
+    background: rgba(52, 152, 219, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
+}
+
+.component-wrapper.selected {
+    border: 2px solid #2ecc71;
+    box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+    z-index: 10;
+}
+
+.prop-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.prop-group label {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.prop-group input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
