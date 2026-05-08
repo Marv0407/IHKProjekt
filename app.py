@@ -156,7 +156,6 @@ def get_layout_id(id):
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-# JSON-Validierung---
 def is_valid_layout(data):
     """
     Prüft, ob das empfangene JSON die strukturellen Mindestanforderungen erfüllt.
